@@ -5,7 +5,7 @@ ui = pageWithSidebar(
   headerPanel("Aufgabe 1 - Datensatz 'swiss'"),
   sidebarPanel(width = 2,
                selectInput(
-                 "independantAttirbuteDropdown",
+                 "independantAttributeDropdown",
                  "Attribute (indep)",
                  c (
                    "Fertility",
@@ -17,7 +17,7 @@ ui = pageWithSidebar(
                    "Infant Mortality" = "Infant.Mortality"
                  )
                ),selectInput(
-                 "dependantAttirbuteDropdown",
+                 "dependantAttributeDropdown",
                  "Counter Attribut (Scatterplot, dependant)",
                  c (
                    "Fertility",
@@ -186,59 +186,58 @@ if (type == "skewness") {
 server = function(input, output) {
   ##################################
   # text output
-  output$barplotInterMean = renderText(createText("mean", input$independantAttirbuteDropdown))
-  output$barplotInterTmean = renderText(createText("trimmedMean", input$independantAttirbuteDropdown))
-  output$barplotInterMedian = renderText(createText("median", input$independantAttirbuteDropdown))
-  output$barplotInterMode = renderText(createText("mode", input$independantAttirbuteDropdown))
-  output$barplotInterRange = renderText(createText("range", input$independantAttirbuteDropdown))
-  output$barplotInterQuartile = renderText(createText("quartile", input$independantAttirbuteDropdown))
-  output$barplotInterQuartileAbstand = renderText(createText("quartileAbstand", input$independantAttirbuteDropdown))
-  output$barplotInterVariance = renderText(createText("variance", input$independantAttirbuteDropdown))
-  output$barplotInterStdDeviation = renderText(createText("standardDeviation", input$independantAttirbuteDropdown))
-  output$barplotInterSkewness = renderText(createText("skewness", input$independantAttirbuteDropdown))
+  output$barplotInterMean = renderText(createText("mean", input$independantAttributeDropdown))
+  output$barplotInterTmean = renderText(createText("trimmedMean", input$independantAttributeDropdown))
+  output$barplotInterMedian = renderText(createText("median", input$independantAttributeDropdown))
+  output$barplotInterMode = renderText(createText("mode", input$independantAttributeDropdown))
+  output$barplotInterRange = renderText(createText("range", input$independantAttributeDropdown))
+  output$barplotInterQuartile = renderText(createText("quartile", input$independantAttributeDropdown))
+  output$barplotInterQuartileAbstand = renderText(createText("quartileAbstand", input$independantAttributeDropdown))
+  output$barplotInterVariance = renderText(createText("variance", input$independantAttributeDropdown))
+  output$barplotInterStdDeviation = renderText(createText("standardDeviation", input$independantAttributeDropdown))
+  output$barplotInterSkewness = renderText(createText("skewness", input$independantAttributeDropdown))
 
   ##################################
   # plot output
-  output$qqPlot = renderPlot(createQQPlot(input$independantAttirbuteDropdown))
-  output$histogram = renderPlot(createHistogram(input$independantAttirbuteDropdown))
-  output$boxplot = renderPlot(createBoxplot(input$independantAttirbuteDropdown))
-  output$histogrammBellCurve = renderPlot(createHistogramWithBellCurve(input$independantAttirbuteDropdown))
-
+  output$qqPlot = renderPlot(createQQPlot(input$independantAttributeDropdown))
+  output$histogram = renderPlot(createHistogram(input$independantAttributeDropdown))
+  output$boxplot = renderPlot(createBoxplot(input$independantAttributeDropdown))
+  output$histogrammBellCurve = renderPlot(createHistogramWithBellCurve(input$independantAttributeDropdown))
 
   output$residualPlots = renderPlot({
-    lmResult = lm(swiss[,input$dependantAttirbuteDropdown] ~ swiss[,input$independantAttirbuteDropdown])
+    lmResult = lm(swiss[,input$dependantAttributeDropdown] ~ swiss[,input$independantAttributeDropdown])
     par(mfrow = c(2, 2))
     plot(lmResult)
   }, height=500)
 
-  #independantAttirbuteDropdown = indep
-  #dependantAttirbuteDropdown = dep
+  #independantAttributeDropdown = indep
+  #dependantAttributeDropdown = dep
   #lm(dep,indep)
   output$scatterplot2 <- renderPlot({
-    plot(swiss[,input$independantAttirbuteDropdown], swiss[,input$dependantAttirbuteDropdown],
+    plot(swiss[,input$independantAttributeDropdown], swiss[,input$dependantAttributeDropdown],
          main="Scatterplot",
-         xlab=paste("independant: ", input$independantAttirbuteDropdown),
-         ylab=paste("dependant: ", input$dependantAttirbuteDropdown),
+         xlab=paste("independant: ", input$independantAttributeDropdown),
+         ylab=paste("dependant: ", input$dependantAttributeDropdown),
          pch=19)
 
     # https://bookdown.org/paulcbauer/idv2/8-20-example-a-simple-regression-app.html
-    lmResult = lm(swiss[,input$dependantAttirbuteDropdown] ~ swiss[,input$independantAttirbuteDropdown])
+    lmResult = lm(swiss[,input$dependantAttributeDropdown] ~ swiss[,input$independantAttributeDropdown])
 
     predicted = predict(lmResult)
     residuals = residuals(lmResult)
     abline(lmResult, col="red")
 
     # Lowess Smoothing (dynamic line following the data)
-    lines(lowess(swiss[,input$independantAttirbuteDropdown],swiss[,input$dependantAttirbuteDropdown]), col="blue")
+    lines(lowess(swiss[,input$independantAttributeDropdown],swiss[,input$dependantAttributeDropdown]), col="blue")
 
   }, height=400)
 
   output$scatterplot3 <- renderPlot({
-    lmResult = lm(swiss[,input$dependantAttirbuteDropdown] ~ swiss[,input$independantAttirbuteDropdown])
+    lmResult = lm(swiss[,input$dependantAttributeDropdown] ~ swiss[,input$independantAttributeDropdown])
     #predicted = predict(lmResult)
     residuals = resid(lmResult)
 
-    plot(swiss[,input$independantAttirbuteDropdown], residuals, ylab="Residuals", xlab=input$independantAttirbuteDropdown)
+    plot(swiss[,input$independantAttributeDropdown], residuals, ylab="Residuals", xlab=input$independantAttributeDropdown)
   }, height=400)
 }
 
