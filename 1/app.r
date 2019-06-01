@@ -54,7 +54,8 @@ ui = pageWithSidebar(
         tabPanel("Histogramm Detail", plotOutput("histogrammBellCurve")),
         tabPanel("Boxplot", plotOutput("boxplot")),
         tabPanel("Scatterplot lm fancy", plotOutput("scatterplot2")),
-        tabPanel("Scatterplot residual visualisation", plotOutput("scatterplot3"))
+        tabPanel("Scatterplot residual visualisation", plotOutput("scatterplot3")),
+        tabPanel("Residual Plots", plotOutput("residualPlots"))
       )
     )
   )
@@ -203,6 +204,13 @@ server = function(input, output) {
   output$boxplot = renderPlot(createBoxplot(input$independantAttirbuteDropdown))
   output$histogrammBellCurve = renderPlot(createHistogramWithBellCurve(input$independantAttirbuteDropdown))
 
+
+  output$residualPlots = renderPlot({
+    lmResult = lm(swiss[,input$dependantAttirbuteDropdown] ~ swiss[,input$independantAttirbuteDropdown])
+    par(mfrow = c(2, 2))
+    plot(lmResult)
+  }, height=500)
+
   #independantAttirbuteDropdown = indep
   #dependantAttirbuteDropdown = dep
   #lm(dep,indep)
@@ -215,6 +223,7 @@ server = function(input, output) {
 
     # https://bookdown.org/paulcbauer/idv2/8-20-example-a-simple-regression-app.html
     lmResult = lm(swiss[,input$dependantAttirbuteDropdown] ~ swiss[,input$independantAttirbuteDropdown])
+
     predicted = predict(lmResult)
     residuals = residuals(lmResult)
     abline(lmResult, col="red")
