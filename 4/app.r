@@ -5,7 +5,8 @@ ui = pageWithSidebar(
   sidebarPanel(width = 2,
                checkboxInput("classInputId", "class"),
                checkboxInput("sexInputId", "sex"),
-               checkboxInput("ageInputId", "age")
+               checkboxInput("ageInputId", "age"),
+               checkboxInput("shadeInputId", "shade")
                ),
   mainPanel(
     width = 10,
@@ -35,8 +36,12 @@ createMosaiqPlot = function(input) {
   }
   
   formula = as.formula(formulaString)
-  
-  mosaicplot = mosaicplot(formula, main = "Survival on the Titanic", data = Titanic, color = TRUE)
+  mosaicplot = mosaicplot(formula, main = "Survival on the Titanic", 
+                          data = Titanic,
+                          pop = FALSE, 
+                          shade = input$shadeInputId, 
+                          direction = "v",
+                          color = TRUE)
   return(mosaicplot)
 }
 
