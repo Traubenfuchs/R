@@ -51,14 +51,41 @@ ui = pageWithSidebar(
       tabsetPanel(
         tabPanel("QQ plot", plotOutput("qqPlot")),
         tabPanel("Histogram", plotOutput("histogram")),
+        tabPanel("Histogramm Detail", plotOutput("histogrammBellCurve")),
         tabPanel("Boxplot", plotOutput("boxplot")),
-        tabPanel("Scatterplot raw", plotOutput("scatterplot")),
         tabPanel("Scatterplot lm fancy", plotOutput("scatterplot2")),
         tabPanel("Scatterplot residual visualisation", plotOutput("scatterplot3"))
       )
     )
   )
 )
+
+createHistogramWithBellCurve = function(selectedAttribute){
+  g = get(selectedAttribute, swiss)
+  h = hist(g, breaks = 39, freq = TRUE, xlab = "Percentage", main = selectedAttribute)
+
+  xfit = seq(min(g), max(g), length = 40)
+  yfit = dnorm(xfit, mean = mean(g), sd = sd(g))
+  yfit = yfit * diff(h$mids[1:2]) * length(g)
+
+  lines(xfit, yfit)
+  abline(v = mean(g), col = "blue")
+
+  sk = ""
+
+  if(skewness(g) > 0)
+    sk = "rechts schief"
+  else if (skewness(g) < 0)
+    sk = "links schief"
+  else
+    sk = "symmetrisch"
+
+  legend(min(h$breaks), max(h$counts),
+         legend=c("Mean", sk),
+         col=c("blue", "black"), lty=1:1, cex=0.8)
+
+  return(h)
+}
 
 getmode = function(v) {
       uniqv = unique(v)
@@ -174,9 +201,7 @@ server = function(input, output) {
   output$qqPlot = renderPlot(createQQPlot(input$independantAttirbuteDropdown))
   output$histogram = renderPlot(createHistogram(input$independantAttirbuteDropdown))
   output$boxplot = renderPlot(createBoxplot(input$independantAttirbuteDropdown))
-  output$scatterplot = renderPlot(createScatterPlot(input$independantAttirbuteDropdown, input$dependantAttirbuteDropdown))
-
-
+  output$histogrammBellCurve = renderPlot(createHistogramWithBellCurve(input$independantAttirbuteDropdown))
 
   #independantAttirbuteDropdown = indep
   #dependantAttirbuteDropdown = dep

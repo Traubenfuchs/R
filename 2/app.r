@@ -58,7 +58,6 @@ ui = pageWithSidebar(
         tabPanel("Histogram", plotOutput("histogram")),
         tabPanel("Histogramm Detail", plotOutput("histogrammBellCurve")),
         tabPanel("Boxplot", plotOutput("boxplot")),
-        tabPanel("Scatterplot raw", plotOutput("scatterplot")),
         tabPanel("Scatterplot lm fancy", plotOutput("scatterplot2")),
         tabPanel("Scatterplot residual visualisation", plotOutput("scatterplot3"))
       )
@@ -212,8 +211,7 @@ server = function(input, output) {
   output$histogram = renderPlot(createHistogram(input$independantAttirbuteDropdown))
   output$histogrammBellCurve = renderPlot(createHistogramWithBellCurve(input$independantAttirbuteDropdown))
   output$boxplot = renderPlot(createBoxplot(input$independantAttirbuteDropdown))
-  output$scatterplot = renderPlot(createScatterPlot(input$independantAttirbuteDropdown, input$dependantAttirbuteDropdown))
-  output$test = renderPlot(createTest(input$independantAttirbuteDropdown))
+ output$test = renderPlot(createTest(input$independantAttirbuteDropdown))
   
   
   #independantAttirbuteDropdown = indep
